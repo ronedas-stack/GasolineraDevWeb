@@ -106,7 +106,7 @@ body {
 }
 
 .btn-register:hover {
-    background: #0369a1;
+    background: #0f4ad4;
 }
 
 .btn-dark {
@@ -115,7 +115,7 @@ body {
 }
 
 .btn-dark:hover {
-    background: #0f172a;
+    background: #0f4ad4;
 }
 
 /* --- Primer article (Hero) --- */
@@ -287,4 +287,63 @@ body {
     .art1, .art2, .art3 {
         width: 100%;
     }
+}
+
+/*Estilos para el Modo Oscuro */
+body.dark-mode {
+    background-color: #0b132b; 
+    color: #ffffff;            
+}
+
+/* Cambiar el fondo y texto de los contenedores/tarjetas en modo oscuro */
+body.dark-mode .barra_nav,
+body.dark-mode .sidebar,
+body.dark-mode .art1, 
+body.dark-mode .art2, 
+body.dark-mode .art3,
+body.dark-mode .menuhamburguesa {
+    background-color: #1c2541; /* color Tarjetas */
+    color: #ffffff;
+    border-color: #3a506b;
+}
+
+/* Ajustar los textos y enlaces internos para que se lean bien */
+body.dark-mode .logo,
+body.dark-mode .sidebar h3,
+body.dark-mode .blog-content h2 {
+    color: #ffffff;
+}
+
+body.dark-mode .blog-content p,
+body.dark-mode .search-results,
+body.dark-mode .menuhamburguesa li a {
+    color: #ffffff; 
+}
+
+body.dark-mode .menuhamburguesa li a:hover {
+    color: #38bdf8; /* Azul brillante al pasar el cursor */
+}
+body.dark-mode .btn-login {
+    background: transparent;
+    color: #38bdf8; /* Azul brillante */
+    border: 1px solid #38bdf8;
+}
+body.dark-mode .btn-login:hover {
+    background: #b0b4c0; /* Fondo oscuro al pasar el cursor */
+}
+body.dark-mode .btn-mode-toggle {
+    background: #38bdf8; /* Azul brillante */
+    color: #1c2541; /* Texto oscuro */
+}
+
+body.dark-mode .menu-toggle {
+    display: block !important; /* Forzado para que aparezca siempre, sin importar la pantalla */
+    cursor: pointer;
+    font-size: 1.6rem;
+    color: #eeeff0;
+    transition: color 0.2s;
+}
+
+body.dark-mode .menu-toggle:hover {
+    color: #0284c7;
 }
