@@ -17,7 +17,7 @@
             <span>Tu Gasolinera</span>
         </div>
 
-        <!-- Menú de navegación Hamburguesa -->
+       
         
 
         <!-- Botones  a la izquierda del menú hamburguesa -->
@@ -67,36 +67,52 @@
     <!-- Contenedor o artículos del blog inferiores -->
     <div class="articulos-container">
         <!-- Artículo 1 -->
-        <article class="art1">
-            <img src="media/eficiencia.png" alt="Precio combustibles" class="blog-img">
-            <div class="blog-content">
-                <h2>Nuevos precios de los combustibles</h2>
-                <p>Descubre cómo han fluctuado las tarifas en las principales gasolineras del país durante este mes y dónde repostar más barato.</p>
-                <button class="btn-saber-mas">Saber más</button>
-            </div>
-        </article>
-
-        <!-- Artículo 2 -->
-        <article class="art2">
-            <img src="media/precios.png" alt="Ahorrar gasolina" class="blog-img">
-            <div class="blog-content">
-                <h2>Cómo ahorrar gasolina en ciudad</h2>
-                <p>Consejos prácticos de conducción eficiente que te ayudarán a reducir notablemente el consumo de combustible en tus trayectos diarios.</p>
-                <button class="btn-saber-mas">Saber más</button>
-            </div>
-        </article>
-
-        <!-- Artículo 3 -->
-        <article class="art3">
-            <img src="media/calidad.png" alt="Gasolineras low cost" class="blog-img">
-            <div class="blog-content">
-                <h2>El auge de las gasolineras Low Cost</h2>
-                <p>Analizamos la calidad de los carburantes económicos frente a las marcas tradicionales y si realmente merece la pena repostar en ellas.</p>
-                <button class="btn-saber-mas">Saber más</button>
-            </div>
-        </article>
+<article class="art1">
+    <img src="media/eficiencia.png" alt="Precio combustibles" class="blog-img">
+    <div class="blog-content">
+        <h2>Nuevos precios de los combustibles</h2>
+        <p>Descubre cómo han fluctuado las tarifas en las principales gasolineras del país durante este mes y dónde repostar más barato.</p>
+        <button class="btn-saber-mas" data-complementaria="Informe técnico detallado: Las gasolineras low cost han registrado una bajada del 2.3% en promedio de sus carburantes. Documento oficial refrendado por la Asociación de Consumidores.">Saber más</button>
     </div>
+</article>
 
+<!-- Artículo 2 -->
+<article class="art2">
+    <img src="media/precios.png" alt="Ahorrar gasolina" class="blog-img">
+    <div class="blog-content">
+        <h2>Cómo ahorrar gasolina en ciudad</h2>
+        <p>Consejos prácticos de conducción eficiente que te ayudarán a reducir notablemente el consumo de combustible en tus trayectos diarios.</p>
+        <button class="btn-saber-mas" data-complementaria="Guía de conducción eficiente v4.2: Mantener las revoluciones entre 2000 y 2500 RPM reduce hasta un 15% el gasto en trayectos urbanos cortos. Incluye infografía descargable.">Saber más</button>
+    </div>
+</article>
+
+<!-- Artículo 3 -->
+<article class="art3">
+    <img src="media/calidad.png" alt="Gasolineras low cost" class="blog-img">
+    <div class="blog-content">
+        <h2>El auge de las gasolineras Low Cost</h2>
+        <p>Analizamos la calidad de los carburantes económicos frente a las marcas tradicionales y si realmente merece la pena repostar en ellas.</p>
+        <button class="btn-saber-mas" data-complementaria="Estudio comparativo de aditivos: Los análisis de laboratorio demuestran que el combustible base cumple estrictamente con la normativa europea, diferenciándose únicamente en el paquete de aditivos finales.">Saber más</button>
+    </div>
+</article>
+
+<!-- Ventana Pop-up (Modal) -->
+<div id="modalSaberMas" class="modal-overlay">
+    <div class="modal-content">
+        <h2 id="modal-titulo">Título del artículo</h2>
+        <p id="modal-texto">Descripción corta...</p>
+        
+        <!-- Aquí se mostrará la información complementaria y el documento -->
+        <div class="modal-documento">
+            <p><strong>Información Complementaria y Documento:</strong></p>
+            <p id="modal-complementaria">Cargando datos...</p>
+        </div>
+
+        <!-- Único botón para cerrar -->
+        <button id="cerrarModal" class="btn-cerrar">Cerrar</button>
+    </div>
+</div>
+</div>
     <!-- Script JS -->
     <script src="js/script.js"></script>
 </body>

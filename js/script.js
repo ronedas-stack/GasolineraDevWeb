@@ -18,14 +18,32 @@ const botonOscuro = document.querySelector('.btn-dark');
        if (document.body.classList.contains('dark-mode')) {
             document.body.classList.remove('dark-mode');
             botonOscuro.textContent = 'Modo Oscuro';
-            iconoMenu.classList.remove('bi-grid');
-            iconoMenu.classList.add('bi-grid-fill');
+            
         } else {
             botonOscuro.textContent = 'Modo Claro';
             document.body.classList.toggle('dark-mode');
-            iconoMenu.classList.remove('bi-grid-fill');
-            iconoMenu.classList.add('bi-grid');
+            
         }
         
     });
+    
+// --- Lógica para mostrar la información y el documento en un Alert ---
+const botonesSaberMas = document.querySelectorAll('.btn-saber-mas');
 
+// Al hacer clic en cualquier botón "Saber más"
+botonesSaberMas.forEach(boton => {
+    boton.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        // Encuentra el contenedor del artículo
+        const contenidoBlog = boton.closest('.blog-content');
+        
+        // Extrae los datos del HTML
+        const tituloArticulo = contenidoBlog.querySelector('h2').textContent;
+        const textoArticulo = contenidoBlog.querySelector('p').textContent;
+        const infoExtra = boton.getAttribute('data-complementaria'); // Captura la info única del botón
+        
+        // Muestra la información organizada en la ventana emergente tipo alert
+        alert(`📖 ${tituloArticulo}\n\n${textoArticulo}\n\n📄 INFORMACIÓN COMPLEMENTARIA / DOCUMENTO:\n${infoExtra}`);
+    });
+});

@@ -347,3 +347,27 @@ body.dark-mode .menu-toggle {
 body.dark-mode .menu-toggle:hover {
     color: #0284c7;
 }
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Fondo oscuro semitransparente */
+    display: none; /* Ocultamos el texto */
+    justify-content: center;
+    align-items: center;
+    z-index: 2000; /* Lo coloca por encima de todo */
+    padding: 20px;
+}
+
+.modal-content {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
