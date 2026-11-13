@@ -22,7 +22,7 @@ body {
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     margin-bottom: 25px;
-    position: relative; /* Clave para que el menú absoluto se posicione respecto a la barra */
+    position: relative;
 }
 
 .logo {
@@ -52,13 +52,12 @@ body {
     border-radius: 10px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.1);
     gap: 12px;
-    display: none; /* Oculto inicialmente */
+    display: none;
     list-style: none;
     border: 1px solid #e2e8f0;
     z-index: 1000;
 }
 
-/* Clase que activa JavaScript para mostrar el menú al pulsar el botón */
 .barra_nav nav ul.menuhamburguesa.active {
     display: flex !important;
 }
@@ -198,53 +197,69 @@ body {
     color: #64748b;
 }
 
-/* --- Artículos blog inferiores --- */
-.articulos-container {
+/* --- Carrusel y Artículos blog inferiores --- */
+.carousel-wrapper {
+    max-width: 850px;
+    margin: 0 auto 40px auto;
+}
+
+.carousel {
     display: flex;
-    justify-content: space-between;
-    gap: 1.5%;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.articulos-container {
+    width: 100%;
+    max-width: 600px;
 }
 
 .art1, .art2, .art3 {
     background: #ffffff;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    width: 32%;
-    margin-bottom: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    animation: fadeIn 0.35s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0.4; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .blog-img {
     width: 100%;
-    height: 180px;
+    height: 240px;
     object-fit: cover;
     object-position: center;
     display: block;
 }
 
 .blog-content {
-    padding: 20px;
+    padding: 24px;
 }
 
 .blog-content h2 {
-    font-size: 1.1rem;
+    font-size: 1.25rem;
     color: #1e293b;
     margin-bottom: 10px;
 }
 
 .blog-content p {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     color: #64748b;
     margin-bottom: 20px;
     line-height: 1.5;
 }
 
 .btn-saber-mas {
-    padding: 6px 12px;
+    padding: 8px 16px;
     background: transparent;
     color: #0284c7;
     border: 1px solid #0284c7;
-    border-radius: 4px;
+    border-radius: 6px;
     font-weight: 600;
     cursor: pointer;
     transition: 0.2s;
@@ -255,6 +270,43 @@ body {
     color: white;
 }
 
+/* --- Botones del Carrusel y Controles Play/Stop --- */
+.btn-carousel,
+.btn-control {
+    padding: 10px 18px;
+    background-color: #0284c7;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background-color 0.2s, opacity 0.2s;
+    white-space: nowrap;
+}
+
+.btn-carousel:hover:not(:disabled),
+.btn-control:hover:not(:disabled) {
+    background-color: #0f4ad4;
+}
+
+.btn-carousel:disabled,
+.btn-control:disabled {
+    background-color: #94a3b8;
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.controles {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 18px;
+}
+
 /* --- Botón del Menú Hamburguesa (Siempre Visible) --- */
 .nav-right {
     display: flex;
@@ -263,7 +315,7 @@ body {
 }
 
 .menu-toggle {
-    display: block !important; /* Forzado para que aparezca siempre, sin importar la pantalla */
+    display: block !important;
     cursor: pointer;
     font-size: 1.6rem;
     color: #1e293b;
@@ -274,40 +326,39 @@ body {
     color: #0284c7;
 }
 
-/* --- Media query únicamente para adaptar columnas en pantallas estrechas --- */
+/* --- Media query para pantallas estrechas --- */
 @media screen and (max-width: 900px) {
     .contenedor {
         flex-direction: column;
     }
 
-    .articulos-container {
-        flex-direction: column;
+    .carousel {
+        flex-wrap: wrap;
     }
 
-    .art1, .art2, .art3 {
-        width: 100%;
+    .articulos-container {
+        order: -1;
+        max-width: 100%;
     }
 }
 
-/*Estilos para el Modo Oscuro */
+/* --- Estilos para el Modo Oscuro --- */
 body.dark-mode {
     background-color: #0b132b; 
     color: #ffffff;            
 }
 
-/* Cambiar el fondo y texto de los contenedores/tarjetas en modo oscuro */
 body.dark-mode .barra_nav,
 body.dark-mode .sidebar,
 body.dark-mode .art1, 
 body.dark-mode .art2, 
 body.dark-mode .art3,
 body.dark-mode .menuhamburguesa {
-    background-color: #1c2541; /* color Tarjetas */
+    background-color: #1c2541;
     color: #ffffff;
     border-color: #3a506b;
 }
 
-/* Ajustar los textos y enlaces internos para que se lean bien */
 body.dark-mode .logo,
 body.dark-mode .sidebar h3,
 body.dark-mode .blog-content h2 {
@@ -321,23 +372,44 @@ body.dark-mode .menuhamburguesa li a {
 }
 
 body.dark-mode .menuhamburguesa li a:hover {
-    color: #38bdf8; /* Azul brillante al pasar el cursor */
+    color: #38bdf8;
 }
+
 body.dark-mode .btn-login {
     background: transparent;
-    color: #38bdf8; /* Azul brillante */
+    color: #38bdf8;
     border: 1px solid #38bdf8;
 }
+
 body.dark-mode .btn-login:hover {
-    background: #b0b4c0; /* Fondo oscuro al pasar el cursor */
+    background: #b0b4c0;
 }
+
 body.dark-mode .btn-mode-toggle {
-    background: #38bdf8; /* Azul brillante */
-    color: #1c2541; /* Texto oscuro */
+    background: #38bdf8;
+    color: #1c2541;
+}
+
+body.dark-mode .btn-carousel,
+body.dark-mode .btn-control {
+    background-color: #38bdf8;
+    color: #0b132b;
+}
+
+body.dark-mode .btn-carousel:hover:not(:disabled),
+body.dark-mode .btn-control:hover:not(:disabled) {
+    background-color: #0284c7;
+    color: #ffffff;
+}
+
+body.dark-mode .btn-carousel:disabled,
+body.dark-mode .btn-control:disabled {
+    background-color: #3a506b;
+    color: #94a3b8;
 }
 
 body.dark-mode .menu-toggle {
-    display: block !important; /* Forzado para que aparezca siempre, sin importar la pantalla */
+    display: block !important;
     cursor: pointer;
     font-size: 1.6rem;
     color: #eeeff0;
@@ -354,11 +426,11 @@ body.dark-mode .menu-toggle:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6); /* Fondo oscuro semitransparente */
-    display: none; /* Ocultamos el texto */
+    background-color: rgba(0, 0, 0, 0.6);
+    display: none;
     justify-content: center;
     align-items: center;
-    z-index: 2000; /* Lo coloca por encima de todo */
+    z-index: 2000;
     padding: 20px;
 }
 
