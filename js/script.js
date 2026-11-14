@@ -11,6 +11,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- 2. Gestión de Artículos con Almacenamiento Permanente (localStorage) ---
     const STORAGE_KEY = 'tu_gasolinera_posts_v1';
+    const USERS_STORAGE_KEY = 'tu_gasolinera_users_v1';
+    const SESSION_STORAGE_KEY = 'tu_gasolinera_active_user';
     const contenedorArticulos = document.getElementById('imagen');
 
     const articulosIniciales = [
@@ -62,7 +64,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let posts = obtenerPosts();
 
-    // --- 3. Lógica del Carrusel (3 Artículos Visibles) ---
+    // --- 3. Función Reutilizable para Abrir el Modal "Saber Más" ---
+    const modalSaberMas = document.getElementById('modalSaberMas');
+    const modalTituloTexto = document.getElementById('modal-titulo-texto');
+    const modalTexto = document.getElementById('modal-texto');
+    const modalComplementaria = document.getElementById('modal-complementaria');
+    const btnCerrarModalSaberMas = document.getElementById('cerrarModal');
+
+    function abrirSaberMas(post) {
+        if (!post) return;
+        modalTituloTexto.textContent = post.titulo;
+        modalTexto.textContent = post.contenido;
+        modalComplementaria.textContent = post.complementaria || `Artículo publicado en Tu Gasolinera. Imagen asignada: ${post.imagen}`;
+        modalSaberMas.classList.add('active');
+    }
+
+    if (btnCerrarModalSaberMas) {
+        btnCerrarModalSaberMas.addEventListener('click', () => {
+            modalSaberMas.classList.remove('active');
+        });
+    }
+
+    // --- 4. Lógica del Carrusel (3 Artículos Visibles) ---
     const ARTICULOS_VISIBLES = 3;
     const TIEMPO_INTERVALO_MILESIMAS_SEG = 3000;
     let posicionActual = 0;
@@ -72,9 +95,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const $botonStop = document.querySelector('#stop');
     let intervalo = null;
 
-    /**
-     * Construye los elementos <article> en el DOM a partir del array `posts`
-     */
     function construirDOMArticulos() {
         contenedorArticulos.innerHTML = '';
 
@@ -104,6 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const btn = document.createElement('button');
             btn.className = 'btn-saber-mas';
+            btn.setAttribute('data-id', post.id);
             btn.setAttribute('data-complementaria', post.complementaria || `Artículo publicado en Tu Gasolinera. Imagen asignada: ${post.imagen}`);
             btn.textContent = 'Saber más';
 
@@ -118,9 +139,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    /**
-     * Muestra hasta 3 artículos simultáneamente en orden circular a partir de posicionActual
-     */
     function renderizarImagen() {
         const articulosDOM = contenedorArticulos.querySelectorAll('article');
         const total = articulosDOM.length;
@@ -193,21 +211,249 @@ document.addEventListener("DOMContentLoaded", () => {
     $botonPlay.addEventListener('click', playIntervalo);
     $botonStop.addEventListener('click', stopIntervalo);
 
-    // Delegación de eventos para botones "Saber más"
+    // Delegación de eventos para botones "Saber más" en el carrusel
     contenedorArticulos.addEventListener('click', (e) => {
         const boton = e.target.closest('.btn-saber-mas');
         if (!boton) return;
         e.preventDefault();
 
-        const contenidoBlog = boton.closest('.blog-content');
-        const tituloArticulo = contenidoBlog.querySelector('h2').textContent;
-        const textoArticulo = contenidoBlog.querySelector('p').textContent;
-        const infoExtra = boton.getAttribute('data-complementaria');
+        const postId = boton.getAttribute('data-id');
+        const postEncontrado = posts.find(p => p.id === postId);
 
-        alert(`📖 ${tituloArticulo}\n\n${textoArticulo}\n\n📄 INFORMACIÓN COMPLEMENTARIA / DOCUMENTO:\n${infoExtra}`);
+        if (postEncontrado) {
+            abrirSaberMas(postEncontrado);
+        } else {
+            const contenidoBlog = boton.closest('.blog-content');
+            abrirSaberMas({
+                titulo: contenidoBlog.querySelector('h2').textContent,
+                contenido: contenidoBlog.querySelector('p').textContent,
+                complementaria: boton.getAttribute('data-complementaria')
+            });
+        }
     });
 
-    // --- 4. Funcionalidad Añadir Post (Foto aleatoria Foto1.jpg - Foto10.jpg y persistencia) ---
+    // --- 5. Buscador de Noticias del Blog (con apertura de "Saber más" al pulsar) ---
+    const searchInput = document.getElementById('searchInput');
+    const searchButton = document.getElementById('searchButton');
+    const searchResults = document.getElementById('searchResults');
+
+    function ejecutarBusqueda() {
+        const query = searchInput.value.trim().toLowerCase();
+        searchResults.innerHTML = '';
+
+        if (!query) {
+            searchResults.innerHTML = '<p class="placeholder-text">Escribe una palabra clave para buscar en los artículos del blog.</p>';
+            return;
+        }
+
+        const resultados = posts.filter(post =>
+            post.titulo.toLowerCase().includes(query) ||
+            post.contenido.toLowerCase().includes(query) ||
+            (post.complementaria && post.complementaria.toLowerCase().includes(query))
+        );
+
+        if (resultados.length === 0) {
+            searchResults.innerHTML = `<p class="placeholder-text">No se encontraron noticias que coincidan con "${searchInput.value.trim()}".</p>`;
+            return;
+        }
+
+        const ul = document.createElement('ul');
+        ul.className = 'search-result-list';
+
+        resultados.forEach(post => {
+            const li = document.createElement('li');
+            li.className = 'search-result-item';
+            li.title = 'Haz clic para abrir Saber más';
+
+            const h4 = document.createElement('h4');
+            h4.innerHTML = `<i class="bi bi-journal-text"></i> ${post.titulo}`;
+
+            const p = document.createElement('p');
+            p.textContent = post.contenido;
+
+            li.appendChild(h4);
+            li.appendChild(p);
+
+            // Al pulsar el resultado, se abre directamente la ventana "Saber más" de ese artículo
+            li.addEventListener('click', () => {
+                abrirSaberMas(post);
+            });
+
+            ul.appendChild(li);
+        });
+
+        searchResults.appendChild(ul);
+    }
+
+    if (searchButton && searchInput) {
+        searchButton.addEventListener('click', ejecutarBusqueda);
+        searchInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                ejecutarBusqueda();
+            }
+        });
+    }
+
+    // --- 6. Botón "Ver más detalles" (Información General Emergente) ---
+    const btnDetalles = document.getElementById('btnDetalles');
+    const modalDetalles = document.getElementById('modalDetalles');
+    const cerrarDetalles = document.getElementById('cerrarDetalles');
+
+    if (btnDetalles && modalDetalles) {
+        btnDetalles.addEventListener('click', () => {
+            modalDetalles.classList.add('active');
+        });
+    }
+
+    if (cerrarDetalles) {
+        cerrarDetalles.addEventListener('click', () => {
+            modalDetalles.classList.remove('active');
+        });
+    }
+
+    // --- 7. Botón "Contacto" (Información de Contacto Inventada) ---
+    const menuContact = document.getElementById('menu-contact');
+    const modalContacto = document.getElementById('modalContacto');
+    const cerrarContacto = document.getElementById('cerrarContacto');
+
+    if (menuContact && modalContacto) {
+        menuContact.addEventListener('click', (e) => {
+            e.preventDefault();
+            navMenu.classList.remove('active');
+            modalContacto.classList.add('active');
+        });
+    }
+
+    if (cerrarContacto) {
+        cerrarContacto.addEventListener('click', () => {
+            modalContacto.classList.remove('active');
+        });
+    }
+
+    // --- 8. Registro e Inicio de Sesión de Usuarios (Almacenados en localStorage) ---
+    const btnLogin = document.getElementById('btnLogin');
+    const btnRegister = document.getElementById('btnRegister');
+    const modalLogin = document.getElementById('modalLogin');
+    const modalRegister = document.getElementById('modalRegister');
+    const formLogin = document.getElementById('formLogin');
+    const formRegister = document.getElementById('formRegister');
+    const cancelLogin = document.getElementById('cancelLogin');
+    const cancelRegister = document.getElementById('cancelRegister');
+    const userStatus = document.getElementById('userStatus');
+
+    function obtenerUsuarios() {
+        const guardados = localStorage.getItem(USERS_STORAGE_KEY);
+        if (guardados) {
+            try {
+                return JSON.parse(guardados);
+            } catch (e) {
+                console.error("Error leyendo usuarios:", e);
+            }
+        }
+        return [];
+    }
+
+    function guardarUsuarios(listaUsuarios) {
+        localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(listaUsuarios));
+    }
+
+    function actualizarEstadoSesion() {
+        const usuarioActivo = localStorage.getItem(SESSION_STORAGE_KEY);
+        if (usuarioActivo) {
+            userStatus.innerHTML = `<i class="bi bi-person-check-fill"></i> Hola, ${usuarioActivo}`;
+            userStatus.classList.add('logged-in');
+            btnLogin.textContent = 'Cerrar sesión';
+        } else {
+            userStatus.textContent = '';
+            userStatus.classList.remove('logged-in');
+            btnLogin.textContent = 'Iniciar sesión';
+        }
+    }
+
+    if (btnLogin) {
+        btnLogin.addEventListener('click', () => {
+            const usuarioActivo = localStorage.getItem(SESSION_STORAGE_KEY);
+            if (usuarioActivo) {
+                localStorage.removeItem(SESSION_STORAGE_KEY);
+                actualizarEstadoSesion();
+                alert(`👋 Has cerrado la sesión de "${usuarioActivo}".`);
+            } else {
+                modalLogin.classList.add('active');
+                document.getElementById('loginUsername').focus();
+            }
+        });
+    }
+
+    if (cancelLogin) {
+        cancelLogin.addEventListener('click', () => {
+            formLogin.reset();
+            modalLogin.classList.remove('active');
+        });
+    }
+
+    if (formLogin) {
+        formLogin.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            const usuarios = obtenerUsuarios();
+            const usuarioValido = usuarios.find(u => u.username.toLowerCase() === username.toLowerCase() && u.password === password);
+
+            if (usuarioValido) {
+                localStorage.setItem(SESSION_STORAGE_KEY, usuarioValido.username);
+                actualizarEstadoSesion();
+                formLogin.reset();
+                modalLogin.classList.remove('active');
+                alert(`✅ ¡Bienvenido de nuevo, ${usuarioValido.username}! Has iniciado sesión correctamente.`);
+            } else {
+                alert('⚠️ Usuario o contraseña incorrectos. Si aún no tienes cuenta, pulsa en "Registrarse".');
+            }
+        });
+    }
+
+    if (btnRegister) {
+        btnRegister.addEventListener('click', () => {
+            modalRegister.classList.add('active');
+            document.getElementById('regUsername').focus();
+        });
+    }
+
+    if (cancelRegister) {
+        cancelRegister.addEventListener('click', () => {
+            formRegister.reset();
+            modalRegister.classList.remove('active');
+        });
+    }
+
+    if (formRegister) {
+        formRegister.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('regUsername').value.trim();
+            const password = document.getElementById('regPassword').value;
+
+            if (!username || !password) return;
+
+            const usuarios = obtenerUsuarios();
+            const existe = usuarios.some(u => u.username.toLowerCase() === username.toLowerCase());
+
+            if (existe) {
+                alert('⚠️ Ese nombre de usuario ya está registrado. Por favor, elige otro.');
+                return;
+            }
+
+            usuarios.push({ username, password });
+            guardarUsuarios(usuarios);
+            localStorage.setItem(SESSION_STORAGE_KEY, username);
+            actualizarEstadoSesion();
+
+            formRegister.reset();
+            modalRegister.classList.remove('active');
+            alert(`🎉 Usuario "${username}" registrado y guardado correctamente. Se ha iniciado tu sesión.`);
+        });
+    }
+
+    // --- 9. Funcionalidad Añadir Post (Foto aleatoria Foto1.jpg - Foto10.jpg y persistencia) ---
     const menuAddPost = document.getElementById('menu-add-post');
     const modalAddPost = document.getElementById('modalAddPost');
     const formAddPost = document.getElementById('formAddPost');
@@ -237,7 +483,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (!titulo || !contenido) return;
 
-            // Foto aleatoria entre 1 y 10 (ej: media/Foto1.jpg)
             const numeroAleatorio = Math.floor(Math.random() * 10) + 1;
             const nombreFoto = `Foto${numeroAleatorio}.jpg`;
             const rutaFoto = `media/${nombreFoto}`;
@@ -263,7 +508,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // --- 5. Funcionalidad Eliminar Post (Lista de títulos y borrado permanente) ---
+    // --- 10. Funcionalidad Eliminar Post (Lista de títulos y borrado permanente) ---
     const menuDeletePost = document.getElementById('menu-delete-post');
     const modalDeletePost = document.getElementById('modalDeletePost');
     const deletePostList = document.getElementById('deletePostList');
@@ -328,17 +573,14 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Cerrar modales al hacer clic fuera del cuadro de contenido
+    // Cerrar cualquier modal al hacer clic fuera de la caja blanca
     window.addEventListener('click', (e) => {
-        if (e.target === modalAddPost) {
-            modalAddPost.classList.remove('active');
-        }
-        if (e.target === modalDeletePost) {
-            modalDeletePost.classList.remove('active');
+        if (e.target.classList.contains('modal-overlay')) {
+            e.target.classList.remove('active');
         }
     });
 
-    // --- 6. Modo Oscuro / Claro ---
+    // --- 11. Modo Oscuro / Claro ---
     const botonOscuro = document.querySelector('.btn-dark');
     if (botonOscuro) {
         botonOscuro.addEventListener('click', () => {
@@ -352,7 +594,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Inicializar carrusel al cargar la página
+    // Inicializar estado de sesión y carrusel al cargar la página
+    actualizarEstadoSesion();
     construirDOMArticulos();
     renderizarImagen();
 });

@@ -25,10 +25,13 @@
 
       <!-- Botones a la izquierda del menú hamburguesa -->
       <div class="nav-right">
+        <!-- Indicador de sesión activa -->
+        <span id="userStatus" class="user-status"></span>
+
         <!-- Botones de acción -->
         <div class="auth-buttons">
-          <button class="btn-login">Iniciar sesión</button>
-          <button class="btn-register">Registrarse</button>
+          <button class="btn-login" id="btnLogin">Iniciar sesión</button>
+          <button class="btn-register" id="btnRegister">Registrarse</button>
           <button class="btn-dark">Modo Oscuro</button>
         </div>
 
@@ -38,10 +41,10 @@
         </div>
         <nav>
           <ul class="menuhamburguesa" id="navLinks">
-            <li><a href="#">Inicio</a></li>
+            <li><a href="#" id="menu-home">Inicio</a></li>
             <li><a href="#" id="menu-add-post">Añadir Post</a></li>
             <li><a href="#" id="menu-delete-post">Eliminar Post</a></li>
-            <li><a href="#">Contacto</a></li>
+            <li><a href="#" id="menu-contact">Contacto</a></li>
           </ul>
         </nav>
       </div>
@@ -53,7 +56,7 @@
         <article class="articulo">
           <h2>Tu Gasolinera, Siempre a tu lado</h2>
           <p>Llena tu depósito con nosotros</p>
-          <button class="btn_detalles">Ver más detalles</button>
+          <button class="btn_detalles" id="btnDetalles">Ver más detalles</button>
         </article>
 
         <!-- Barra lateral -->
@@ -172,15 +175,125 @@
         <!-- Ventana Pop-up (Modal Saber Más) -->
         <div id="modalSaberMas" class="modal-overlay">
           <div class="modal-content">
-            <h2 id="modal-titulo">Título del artículo</h2>
-            <p id="modal-texto">Descripción corta...</p>
+            <h2 id="modal-titulo"><i class="bi bi-book"></i> <span id="modal-titulo-texto">Título del artículo</span></h2>
+            <p id="modal-texto" class="modal-subtitle">Descripción corta...</p>
 
             <div class="modal-documento">
-              <p><strong>Información Complementaria y Documento:</strong></p>
+              <p><strong><i class="bi bi-file-earmark-text"></i> Información Complementaria y Documento:</strong></p>
               <p id="modal-complementaria">Cargando datos...</p>
             </div>
 
-            <button id="cerrarModal" class="btn-cerrar">Cerrar</button>
+            <div class="modal-actions">
+              <button id="cerrarModal" class="btn-cerrar">Cerrar</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Ver Más Detalles (Información General) -->
+        <div id="modalDetalles" class="modal-overlay">
+          <div class="modal-content">
+            <h2><i class="bi bi-fuel-pump-fill"></i> Sobre Tu Gasolinera</h2>
+            <p class="modal-subtitle">
+              Somos tu red de estaciones de servicio de confianza, comprometidos con ofrecer carburantes de máxima calidad al mejor precio del mercado.
+            </p>
+            <div class="modal-documento">
+              <p><strong><i class="bi bi-check2-circle"></i> Nuestros Servicios Destacados:</strong></p>
+              <ul class="info-list">
+                <li><strong>Horario ininterrumpido:</strong> Abiertos las 24 horas, los 365 días del año.</li>
+                <li><strong>Combustibles aditivados:</strong> Mayor rendimiento y cuidado para tu motor (Gasolina 95/98, Diésel e+ y GLP).</li>
+                <li><strong>Puntos de recarga eléctrica:</strong> Cargadores ultrarrápidos de hasta 150 kW.</li>
+                <li><strong>Zona de lavado y tienda:</strong> Boxes de alta presión, aspirado y cafetería.</li>
+              </ul>
+            </div>
+            <div class="modal-actions">
+              <button type="button" id="cerrarDetalles" class="btn-cerrar">Entendido</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Contacto -->
+        <div id="modalContacto" class="modal-overlay">
+          <div class="modal-content">
+            <h2><i class="bi bi-envelope-paper-fill"></i> Información de Contacto</h2>
+            <p class="modal-subtitle">
+              ¿Tienes alguna consulta o sugerencia? Nuestro equipo de atención al cliente está a tu disposición:
+            </p>
+            <div class="modal-documento">
+              <ul class="info-list">
+                <li><i class="bi bi-geo-alt-fill"></i> <strong>Dirección Central:</strong> Av. de la Innovación 45, Polígono Industrial Sur, 18015 Granada, España</li>
+                <li><i class="bi bi-telephone-fill"></i> <strong>Teléfono 24h:</strong> +34 900 123 456 (Llamada gratuita)</li>
+                <li><i class="bi bi-envelope-fill"></i> <strong>Correo electrónico:</strong> atencioncliente@tugasolinera.es</li>
+                <li><i class="bi bi-clock-fill"></i> <strong>Oficinas centrales:</strong> Lunes a Viernes de 08:30 a 19:00 h</li>
+              </ul>
+            </div>
+            <div class="modal-actions">
+              <button type="button" id="cerrarContacto" class="btn-cerrar">Cerrar</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Iniciar Sesión -->
+        <div id="modalLogin" class="modal-overlay">
+          <div class="modal-content">
+            <h2><i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión</h2>
+            <form id="formLogin" class="modal-form">
+              <div class="form-group">
+                <label for="loginUsername">Usuario:</label>
+                <input
+                  type="text"
+                  id="loginUsername"
+                  placeholder="Introduce tu nombre de usuario"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="loginPassword">Contraseña:</label>
+                <input
+                  type="password"
+                  id="loginPassword"
+                  placeholder="Introduce tu contraseña"
+                  required
+                />
+              </div>
+              <div class="modal-actions">
+                <button type="button" id="cancelLogin" class="btn-cancelar">Cancelar</button>
+                <button type="submit" class="btn-confirmar">Entrar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Modal Registrarse -->
+        <div id="modalRegister" class="modal-overlay">
+          <div class="modal-content">
+            <h2><i class="bi bi-person-plus-fill"></i> Crear Cuenta</h2>
+            <form id="formRegister" class="modal-form">
+              <div class="form-group">
+                <label for="regUsername">Nuevo Usuario:</label>
+                <input
+                  type="text"
+                  id="regUsername"
+                  placeholder="Elige un nombre de usuario"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="regPassword">Contraseña:</label>
+                <input
+                  type="password"
+                  id="regPassword"
+                  placeholder="Crea una contraseña segura"
+                  required
+                />
+              </div>
+              <p class="form-hint">
+                <i class="bi bi-shield-lock"></i> Tus credenciales quedarán almacenadas para futuras sesiones.
+              </p>
+              <div class="modal-actions">
+                <button type="button" id="cancelRegister" class="btn-cancelar">Cancelar</button>
+                <button type="submit" class="btn-confirmar">Guardar y Registrarse</button>
+              </div>
+            </form>
           </div>
         </div>
 
