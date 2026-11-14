@@ -39,8 +39,8 @@
         <nav>
           <ul class="menuhamburguesa" id="navLinks">
             <li><a href="#">Inicio</a></li>
-            <li><a href="#">Añadir Post</a></li>
-            <li><a href="#">Eliminar Post</a></li>
+            <li><a href="#" id="menu-add-post">Añadir Post</a></li>
+            <li><a href="#" id="menu-delete-post">Eliminar Post</a></li>
             <li><a href="#">Contacto</a></li>
           </ul>
         </nav>
@@ -75,17 +75,17 @@
         </aside>
       </section>
 
-      <!-- Carrusel de Artículos del Blog (Estructura Andros Fenollosa) -->
+      <!-- Carrusel de Artículos del Blog (3 artículos visibles) -->
       <section class="carousel-wrapper">
         <div class="carousel">
-          <button id="retroceder" class="btn-carousel" title="Anterior">
-            <i class="bi bi-chevron-left"></i> Retroceder
+          <button id="retroceder" class="btn-carousel" title="Anterior" aria-label="Anterior">
+            <i class="bi bi-chevron-left"></i>
           </button>
 
           <!-- Contenedor de artículos del blog -->
           <div class="articulos-container" id="imagen">
             <!-- Artículo 1 -->
-            <article class="art1">
+            <article class="art1" data-id="post-1">
               <img
                 src="media/eficiencia.png"
                 alt="Precio combustibles"
@@ -108,7 +108,7 @@
             </article>
 
             <!-- Artículo 2 -->
-            <article class="art2">
+            <article class="art2" data-id="post-2">
               <img
                 src="media/precios.png"
                 alt="Ahorrar gasolina"
@@ -131,7 +131,7 @@
             </article>
 
             <!-- Artículo 3 -->
-            <article class="art3">
+            <article class="art3" data-id="post-3">
               <img
                 src="media/calidad.png"
                 alt="Gasolineras low cost"
@@ -154,8 +154,8 @@
             </article>
           </div>
 
-          <button id="avanzar" class="btn-carousel" title="Siguiente">
-            Avanzar <i class="bi bi-chevron-right"></i>
+          <button id="avanzar" class="btn-carousel" title="Siguiente" aria-label="Siguiente">
+            <i class="bi bi-chevron-right"></i>
           </button>
         </div>
 
@@ -169,20 +169,64 @@
           </button>
         </div>
 
-        <!-- Ventana Pop-up (Modal) -->
+        <!-- Ventana Pop-up (Modal Saber Más) -->
         <div id="modalSaberMas" class="modal-overlay">
           <div class="modal-content">
             <h2 id="modal-titulo">Título del artículo</h2>
             <p id="modal-texto">Descripción corta...</p>
 
-            <!-- Aquí se mostrará la información complementaria y el documento -->
             <div class="modal-documento">
               <p><strong>Información Complementaria y Documento:</strong></p>
               <p id="modal-complementaria">Cargando datos...</p>
             </div>
 
-            <!-- Único botón para cerrar -->
             <button id="cerrarModal" class="btn-cerrar">Cerrar</button>
+          </div>
+        </div>
+
+        <!-- Modal Añadir Post -->
+        <div id="modalAddPost" class="modal-overlay">
+          <div class="modal-content">
+            <h2><i class="bi bi-plus-circle"></i> Añadir Nuevo Post</h2>
+            <form id="formAddPost" class="modal-form">
+              <div class="form-group">
+                <label for="postTitulo">Título del artículo:</label>
+                <input
+                  type="text"
+                  id="postTitulo"
+                  placeholder="Ej: Consejos para el mantenimiento del motor"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="postContenido">Contenido del artículo:</label>
+                <textarea
+                  id="postContenido"
+                  rows="4"
+                  placeholder="Escribe aquí el contenido de la noticia..."
+                  required
+                ></textarea>
+              </div>
+              <p class="form-hint">
+                <i class="bi bi-image"></i> Se asignará automáticamente una foto aleatoria del 1 al 10 (<code>Foto1.jpg</code> - <code>Foto10.jpg</code>).
+              </p>
+              <div class="modal-actions">
+                <button type="button" id="cancelAddPost" class="btn-cancelar">Cancelar</button>
+                <button type="submit" class="btn-confirmar">Aceptar y Guardar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Modal Eliminar Post -->
+        <div id="modalDeletePost" class="modal-overlay">
+          <div class="modal-content">
+            <h2><i class="bi bi-trash3"></i> Eliminar Post Permanentemente</h2>
+            <p class="modal-subtitle">Selecciona el artículo que deseas borrar de forma permanente:</p>
+            <ul id="deletePostList" class="delete-post-list"></ul>
+            <div class="modal-actions">
+              <button type="button" id="closeDeleteModal" class="btn-cancelar">Cerrar</button>
+            </div>
           </div>
         </div>
       </section>
